@@ -1,0 +1,111 @@
+;configura la interrupción 0
+JMP INICIO
+.ORG 0X0002
+RJMP RSI
+
+;configura salida puerto B y puerto D entrada
+INICIO: SEI
+LDI R16, 0X00
+OUT DDRD,  R22
+LDI R16, 0XFF
+OUT DDRB,  R16 
+
+;inicia stack pointer
+LDI R17, 0X08
+OUT SPL,R16
+OUT SPH, R17
+
+
+;configura registros de interrupción
+LDI R16,0X01
+OUT EIMSK,R16
+LDI R17, 0X02
+STS EICRA, R18
+
+RJMP verde
+
+;activa luz verde carros PB0  y luz roja peatonal PB4
+verde:
+CBI PORTB, 2
+CBI PORTB, 1
+SBI PORTB, 0
+SBI PORTB, 4 
+CALL delay
+CALL delay
+CALL delay
+CALL delay
+CALL delay
+CBI PORTB, 2
+RJMP verdep
+
+;parpadea luz verde PB0 carros
+verdep:
+CBI PORTB, 2
+CBI PORTB, 1
+SBI PORTB, 4
+CBI PORTB, 0
+CALL delay
+SBI PORTB, 0
+CALL delay
+CBI PORTB, 0 
+CALL delay
+SBI PORTB, 0
+CALL delay
+CBI PORTB, 0 
+CALL delay
+RJMP naranja
+
+;activa luz naranja carros PB1  y luz roja peatonal PB4
+naranja:
+SBI PORTB, 4 
+SBI PORTB, 1
+CALL delay
+CALL delay
+RJMP rojo
+
+;activa luz roja carros PB2  y luz verde peatonal PB3
+rojo: 
+CBI PORTB, 1
+SBI PORTB, 4
+SBI PORTB, 2
+CALL delay
+CALL delay
+RJMP verde
+
+;rutina de interrupción
+RSI: 
+CBI PORTB, 0
+SBI PORTB, 4
+SBI PORTB, 1
+CALL delay
+CALL delay
+CBI PORTB, 4
+CBI PORTB, 1
+SBI PORTB, 3
+SBI PORTB, 2
+CALL delay
+CBI PORTB, 3
+CALL delay
+SBI PORTB, 3 
+CALL delay
+CBI PORTB, 3
+CALL delay
+SBI PORTB, 3 
+CALL delay
+CBI PORTB, 3
+SBI PORTB, 4
+RETI
+
+;subrutina espera 0.5 segundos
+delay:
+ldi r18, 45
+ldi r19, 255
+ldi r20, 255
+l1: 
+dec r20
+brne l1
+dec r19
+brne l1
+dec r18
+brne l1
+RET
