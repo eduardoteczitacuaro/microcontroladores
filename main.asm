@@ -1,154 +1,194 @@
 ;
-; Semaforo.asm
+; SemaforoPeatonal2.asm
+;
+; Created: 22/06/2025 07:00:54 p. m.
+; Author : luis_
+;
 
-	rjmp Start
-	.ORG 0x0002
-	rjmp RSI_0
-	.ORG 0x0004
-	rjmp RSI_1
+; Asignacion de terminales
+;			SEMAFORO VEHICULAR:
+;	Verde		PORTD PD0
+;	Amarillo	PORTD PD1
+;	ROJO		PORTD PD2
+;	
+;			SEMAFORO PEATONAL
+;	Verde	PORTD PD3
+;	Rojo	PORTD PD4
+;
+;			BOTON PEATONAL
+;	Pulsador	PINB PB0
+;
 
-Start:
-	sei					;Habilita interrupciones globales
+.ORG 0x0000
+RJMP main
 
-	ldi	r16, 0xFF
-	out DDRB,  r16		;Configurar puerto B como salida
+.ORG 0x0020
+main:
+	
+; INICIALIZACION Y CONFIGURACION DE ENTRADA Y SALIDAS:
 
-	ldi	r17, 0xFF
-	out PORTD,  r17		;Configurar resistencias pull-up
+		.EQU delay1 = 250			; retardo de referencia
+		.EQU delayflash = 50		; retardo para intermitencia 
+		.DEF temp =	R16
+		.DEF counter = R17
+		.DEF flag_boton = R18
 
-	ldi r18, 0xFF
-	out SPL, r18		;SPL: Stack Pointer Low byte
-	ldi r19, 0X08
-	out SPH, r19		;SPH: Stack Pointer High byte.
+		LDI temp, 0b00011111		; se configuran de PD0 a PD4 como salida
+		OUT DDRD, temp
+		LDI temp, 0b00000000
+		OUT DDRB, temp				; definicion de PB0 como entrada
+		LDI temp, 0b00000001
+		OUT PORTB, temp				; se activa pull-up en PB0
 
-	ldi	r20, 0x03
-	out	EIMSK, r20		;Habilita INT0
+		CLR temp
+		OUT PORTD, temp				; se limpian los datos del puerto D.
+		CLR flag_boton				; se inicializa una bandera
 
-	ldi	r21, 0x0F
-	sts	EICRA, r21		;Configura flanco de subida
+loop:
+		RCALL revisar_boton
+		SBI PORTD, 0				; prende luz verde semaforo vehicular
+		RCALL delay_5s
+		CBI PORTD, 0				; apaga luz verde semaforo vehicular
+		LDI counter, 6				; destellar 6 veces luz verde 
 
-;***********************************************************************
-inicio: 
+destello_verde:
+		SBI PORTD, 0
+		RCALL delay_250ms
+		CBI PORTD, 0
+		RCALL delay_250ms
+		DEC counter
+		BRNE destello_verde
 
-	sbi PORTB, 3		;Enciende LED rojo peatonal (PB3)
-	cbi PORTB, 0		;Desactiva el rojo  en el pin0 del puerto B
+		SBI PORTD, 1				; prende luz amarilla 3 segundos
+		RCALL delay_3s
+		CBI PORTD, 1
 
-	sbi PORTB, 2		;Activa el led verde en el pin2 del puerto B
+		SBI PORTD, 2				; prende luz roja 8 segundos
+		RCALL delay_8s
 
-	RCALL tseg
-	cbi PORTB, 2		;Desactiva el led verde en el pin2 del puerto B
-	RCALL blink			;parpadeo del foco led 1 segundo
-	RCALL blink			;parpadeo del foco led 1 segundo
-	RCALL blink			;parpadeo del foco led 1 segundo
+		TST flag_boton 
+		BREQ revisar_peaton			; revisar si se solicita cruce peatonal
 
-	sbi PORTB, 1		;Activa el led amarillo en el pin1 del puerto B
-	RCALL tseg
-	cbi PORTB, 1		;Desactiva el amarillo  en el pin1 del puerto B
+		RCALL cruce_peaton			; se realiza cruce peatonal
 
-	sbi PORTB, 0		;Activa el led rojo en el pin0 del puerto B
-	RCALL tseg
-	RCALL tseg
-	;cbi PORTB, 0		;Desactiva el rojo  en el pin0 del puerto B
+revisar_peaton:
+		CBI PORTD, 2				; se apaga la luz roja
+		CLR flag_boton
+		RJMP loop
+		
 
-	RCALL peatonal		;reactivar semáforo peatonal
+;-------------------subrutinas--------------------------
 
-RJMP inicio				;RJMP es un salto Relative Jump (Salto Relativo)
+revisar_boton:
+		SBIS PINB, 0				; verificar si se presiona el boton
+		RJMP antirrebote
+		RET
 
-;*******************************************************************
-;* Subrutina para parpadear semaforo							   *
-;*******************************************************************
-Blink: 
-	sbi PORTB, 2
-	RCALL tseg
-	cbi PORTB, 2
-	RCALL tseg
-ret
+antirrebote: 
+		RCALL delay_50ms
+		SBIS PINB, 0				; verifica si sigue presionado el boton
+		RJMP set_flag
+		RET
 
-;*******************************************************************
-;* Subrutina de retaedo de tiempo								   *
-;*******************************************************************
-tseg:
-	ldi r18, 4;16
-	ldi r19, 12;57
-	ldi r20, 3;12
-	l2: dec r20
-	brne l2
-	dec r19
-	brne l2
-	dec r18
-	brne l2
-	nop
-ret
+set_flag:
+		LDI flag_boton, 1
+		RET
 
-;*******************************************************************
-;* Subrutina Semaforo peatonal      							   *
-;*******************************************************************
-peatonal:
-	sbi PORTB, 4     ; Enciende LED verde peatonal (PB4)
+cruce_peaton:
+		SBI PORTD, 3				; luz roja vehicular encencida y luz verde peatonal encendida
+		RCALL delay_4s 
+		CBI PORTD, 3
+		LDI counter, 4				; 4 destellos de luz verde peatonal
+		RET
 
-	cbi PORTB, 3     ; Apaga LED rojo peatonal (PB3)
+destello_peaton:
+		SBI PORTD, 3
+		RCALL delay_250ms
+		DEC counter
+		BRNE destello_peaton
+		SBI PORTD, 4
+		RET
 
-	RCALL tseg_1       ; Espera 1 segundo
-	RCALL tseg_1      ; Espera 1 segundo
+delay_loop:
+		PUSH R19				; colocar en el Stack
+		RET
 
-	RCALL parpadeo_peatonal
+delay_loop2:
+		LDI R19, 250
+		RET
+
+dl_inner:
+		NOP
+		NOP
+		DEC R19
+		BRNE dl_inner
+		DEC counter
+		BRNE delay_loop2
+		POP R19					; recuperar dato del Stack
+		RET
+
+delay_250ms:
+		LDI counter, 62
+		RET
+
+d250_loop:
+		RCALL delay_4ms
+		DEC counter
+		BRNE d250_loop
+		RET
+
+delay_50ms:
+		LDI counter, 13
+		RCALL delay_loop
+		RET
+
+delay_4ms:
+		LDI counter, 250
+		RET
+
+d4ms_loop:
+		NOP
+		NOP
+		DEC counter
+		BRNE d4ms_loop
+		RET
+
+delay_1s:
+		LDI counter, delay1
+		RCALL delay_loop
+		RET
+
+delay_3s:
+		RCALL delay_1s
+		RCALL delay_1s
+		RCALL delay_1s
+		RET
+
+delay_4s:
+		RCALL delay_1s
+		RCALL delay_1s
+		RCALL delay_1s
+		RCALL delay_1s
+		RET
+
+delay_5s:
+		RCALL delay_1s
+		RCALL delay_4s
+		RET
+
+delay_8s:
+		RCALL delay_4s
+		RCALL delay_4s
+		RET
 
 
-	cbi PORTB, 4     ; Apaga LED verde peatonal
 
-	sbi PORTB, 3     ; Enciende LED rojo peatonal
-ret
-
-;*******************************************************************
-;* Subrutina para parpadear peatonal							   *
-;*******************************************************************
-parpadeo_peatonal:
-	sbi PORTB, 4
-	RCALL tseg_1
-	cbi PORTB, 4
-	RCALL tseg_1
-
-	sbi PORTB, 4
-	RCALL tseg_1
-	cbi PORTB, 4
-	RCALL tseg_1
-ret
-
-;*******************************************************************
-;* Subrutina de retaedo de tiempo								   *
-;*******************************************************************
-tseg_1:
-	ldi r21, 4;16
-	ldi r22, 12;57
-	ldi r23, 3;12
-	l3: dec r23
-	brne l3
-	dec r22
-	brne l3
-	dec r21
-	brne l3
-	nop
-ret
-
-;*******************************************************************
-;* Subrutina interrupcion INT0      							   *
-;*******************************************************************
-RSI_0:
-
-	cbi PORTB, 2		;Desactiva el led verde en el pin2 del puerto B
-	sbi PORTB, 1		;Activa el led amarillo en el pin1 del puerto B
-
-	RCALL tseg
-	cbi PORTB, 1		;Desactiva el amarillo  en el pin1 del puerto B
-
-	sbi PORTB, 0		;Activa el led rojo en el pin0 del puerto B
-	RCALL tseg_1
-	RCALL tseg_1
-	;cbi PORTB, 0		;Desactiva el rojo  en el pin0 del puerto B
-
-	RCALL peatonal		;reactivar semáforo peatonal
-reti
+		
 
 
-RSI_1:
-reti
+
+		
+
+
+
+

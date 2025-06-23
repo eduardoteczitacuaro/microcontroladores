@@ -1,0 +1,48 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328P"</DEVICE>
+ <WORKING_DIR>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>D:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>D:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>D:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\Debug\SemaforoPeatonal2.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>SemaforoPeatonal2.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>SemaforoPeatonal2.map</FILE>
+  <FILE>SemaforoPeatonal2.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <main><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>26</LINE></main>
+  <loop><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>47</LINE></loop>
+  <revisar_boton><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>82</LINE></revisar_boton>
+  <delay_5s><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>174</LINE></delay_5s>
+  <destello_verde><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>54</LINE></destello_verde>
+  <delay_250ms><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>130</LINE></delay_250ms>
+  <delay_3s><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>161</LINE></delay_3s>
+  <delay_8s><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>179</LINE></delay_8s>
+  <revisar_peaton><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>74</LINE></revisar_peaton>
+  <cruce_peaton><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>97</LINE></cruce_peaton>
+  <antirrebote><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>87</LINE></antirrebote>
+  <delay_50ms><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>140</LINE></delay_50ms>
+  <set_flag><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>93</LINE></set_flag>
+  <delay_4s><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>167</LINE></delay_4s>
+  <destello_peaton><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>104</LINE></destello_peaton>
+  <delay_loop><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>112</LINE></delay_loop>
+  <delay_loop2><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>116</LINE></delay_loop2>
+  <dl_inner><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>120</LINE></dl_inner>
+  <d250_loop><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>134</LINE></d250_loop>
+  <delay_4ms><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>145</LINE></delay_4ms>
+  <d4ms_loop><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>149</LINE></d4ms_loop>
+  <delay_1s><FILE>C:\Users\luis_\Desktop\PRACTICAS\SemaforoPeatonal2\SemaforoPeatonal2\main.asm</FILE><LINE>156</LINE></delay_1s>
+ </LABELS>
+</ASSEMBLER_INFO>
